@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.810.20
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrokaTroka.Api", "src\TrokaTroka.Api\TrokaTroka.Api.csproj", "{3C1D10A0-4DA2-4EE7-A617-E48D7F43A180}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C1D10A0-4DA2-4EE7-A617-E48D7F43A180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C1D10A0-4DA2-4EE7-A617-E48D7F43A180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C1D10A0-4DA2-4EE7-A617-E48D7F43A180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C1D10A0-4DA2-4EE7-A617-E48D7F43A180}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {06153BEC-65BD-4D2B-8347-1BF264EEAD85}
+	EndGlobalSection
+EndGlobal
