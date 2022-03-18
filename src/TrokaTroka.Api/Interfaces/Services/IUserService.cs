@@ -11,6 +11,6 @@ namespace TrokaTroka.Api.Interfaces.Services
         Task<TokenViewModel> CreateUser(CreateUserInputModel userInput);
         Task<TokenViewModel> AuthUser(LoginInputModel loginInput);
         Task<RefreshToken> ObterRefreshToken(Guid refreshToken);
-        Task<TokenViewModel> GerarJwtToken(string refreshToken);
+        string GerarJwtToken(string email);
     }
 }

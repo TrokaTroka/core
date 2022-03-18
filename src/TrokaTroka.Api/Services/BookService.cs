@@ -47,13 +47,17 @@ namespace TrokaTroka.Api.Services
             {
                 var photo = book.Photos.Select(c => c.Path).FirstOrDefault();
 
-                var grade = book.Owner.Ratings.Sum(r => r.Grade) / book.Owner.Ratings.ToArray().Length;
+                var ratings = book.Owner.Ratings;
+
+                var grade = ratings.Count == 0
+                    ? 0
+                    : ratings.Sum(r => r.Grade) / ratings.ToArray().Length;
 
                 bookshellVM.Add(new BookshellViewModel(
                     book.Id,
                     book.Title,
                     book.Owner.Name,
-                    grade != 0 ? grade : 0,
+                    grade,
                     photo
                     )
                 );
@@ -84,8 +88,36 @@ namespace TrokaTroka.Api.Services
             );
         }
 
-        public async Task<Guid> CreateBook(CreateBookInputModel bookInput)
+        public async Task<List<MyBooksViewModel>> GetMyBooks()
+        {
+            var user = await _user.GetUserDtoLogged();
+
+            var books = await _bookRepository.BookByUserId(user.Id);
+
+            if (!books.Any())
+            {
+                Notify("Usuário não possui livros cadastrados.");
+                return null;
+            }
+
+            var bookVM = new List<MyBooksViewModel>();
+
+            books.ToList().ForEach(b =>
+                bookVM.Add(new MyBooksViewModel()
                 {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Author = b.Author,
+                    Model = b.Model,
+                    BuyPrice = b.BuyPrice,
+                    Language = b.Language
+                }));
+
+            return bookVM;
+        }
+
+        public async Task<Guid> CreateBook(CreateBookInputModel bookInput)
+        {
             var user = await _user.GetUserDtoLogged();
 
             var book = new Book(

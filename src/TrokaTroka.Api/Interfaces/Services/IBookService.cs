@@ -10,6 +10,7 @@ namespace TrokaTroka.Api.Interfaces.Services
     {
         Task<IEnumerable<BookshellViewModel>> GetBookshell(int page, int take, int skip);
         Task<BookViewModel> GetBookById(Guid idBook);
+        Task<List<MyBooksViewModel>> GetMyBooks();
         Task<Guid> CreateBook(CreateBookInputModel bookInput);
         Task UpdateBook(UpdateBookInputModel bookInput);
         Task DeleteBook(Guid idBook);

@@ -56,7 +56,7 @@ namespace TrokaTroka.Api.Controllers
             if (refreshToken is null)
                 return BadRequest("Refresh token expirado");
 
-            var token = await _userService.GerarJwtToken(refreshToken.Username);
+            var token = _userService.GerarJwtToken(refreshToken.Username);
 
             return Ok(token);
         }

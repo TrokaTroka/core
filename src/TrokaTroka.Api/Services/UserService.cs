@@ -44,7 +44,25 @@ namespace TrokaTroka.Api.Services
 
             await _userRepository.Create(user);
 
-            return GerarToken(user);
+            var token = GerarJwtToken(user.Email);
+
+            var userVM = new UserViewModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password,
+            };
+
+            var refreshToken = GerarRefreshToken(user.Email).Result;
+                     
+            return new TokenViewModel()
+            {
+                User = userVM,
+                Token = token,
+                RefreshToken = refreshToken.Token,
+                Expiration = DateTime.UtcNow.AddHours(2)
+            };
         }
 
         public async Task<TokenViewModel> AuthUser(LoginInputModel loginInput)
@@ -57,10 +75,28 @@ namespace TrokaTroka.Api.Services
                 return null;
             }
 
-            return GerarToken(user);
+            var token = GerarJwtToken(user.Email);
+
+            var userVM = new UserViewModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password,
+            };
+
+            var refreshToken = GerarRefreshToken(loginInput.Email).Result;
+
+            return new TokenViewModel()
+            {
+                User = userVM,
+                Token = token,
+                RefreshToken = refreshToken.Token,
+                Expiration = DateTime.UtcNow.AddHours(2)
+            };
         }
 
-        private TokenViewModel GerarToken(User user)
+        public string GerarJwtToken(string email)
         {
             var key = AppSettings.Instance.SecretKey;
             var issuer = AppSettings.Instance.Issuer;
@@ -74,7 +110,7 @@ namespace TrokaTroka.Api.Services
                 Subject = new ClaimsIdentity(
                     new Claim[]
                     {
-                        new Claim(ClaimTypes.Name, user.Email)
+                        new Claim(ClaimTypes.Name, email)
                     }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = credentials,
@@ -86,38 +122,7 @@ namespace TrokaTroka.Api.Services
 
             var stringToken = tokenHandler.CreateToken(token);
 
-            var userVM = new UserViewModel()
-            {
-                Id= user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-            };
-
-            var refreshToken = GerarRefreshToken(user.Email).Result;
-
-            return new TokenViewModel()
-            {
-                User = userVM,
-                Token = tokenHandler.WriteToken(stringToken),
-                RefreshToken = refreshToken.Token,
-                Expiration = DateTime.UtcNow.AddHours(2)
-            };
-        }
-
-        public async Task<TokenViewModel> GerarJwtToken(string email)
-        {
-            var user = await _userRepository.GetUserByEmail(email);
-
-            var userVM = new UserViewModel()
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-            };
-
-            return new TokenViewModel();
+            return tokenHandler.WriteToken(stringToken);
         }
 
         private static string ComputeSha256Hash(string password)
@@ -158,6 +163,52 @@ namespace TrokaTroka.Api.Services
             return token != null && token.ExpirationDate.ToLocalTime() > DateTime.Now
                 ? token
                 : null;
+        }
+
+
+        private TokenViewModel GerarToken(User user)
+        {
+            var key = AppSettings.Instance.SecretKey;
+            var issuer = AppSettings.Instance.Issuer;
+            var audience = AppSettings.Instance.Audience;
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(
+                    new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, user.Email)
+                    }),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = credentials,
+                Issuer = issuer,
+                Audience = audience
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var stringToken = tokenHandler.CreateToken(token);
+
+            var userVM = new UserViewModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password,
+            };
+
+            var refreshToken = GerarRefreshToken(user.Email).Result;
+
+            return new TokenViewModel()
+            {
+                User = userVM,
+                Token = tokenHandler.WriteToken(stringToken),
+                RefreshToken = refreshToken.Token,
+                Expiration = DateTime.UtcNow.AddHours(2)
+            };
         }
     }
 }

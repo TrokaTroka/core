@@ -6,6 +6,7 @@ using TrokaTroka.Api.Dtos.InputModels;
 using TrokaTroka.Api.Interfaces;
 using TrokaTroka.Api.Interfaces.Services;
 using TrokaTroka.Api.Notifications;
+using System.Linq;
 
 namespace TrokaTroka.Api.Controllers
 {
@@ -46,6 +47,17 @@ namespace TrokaTroka.Api.Controllers
                 return BadRequest();
 
                 return Ok(bookVM);
+        }
+
+        [HttpGet("my-books")]
+        public async Task<IActionResult> GetMyBooks()
+        {
+            var bookVM = await _bookService.GetMyBooks();
+
+            if (bookVM == null)
+                return BadRequest("");
+
+            return Ok(bookVM);
         }
 
         [HttpPost]

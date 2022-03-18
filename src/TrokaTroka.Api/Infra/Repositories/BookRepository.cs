@@ -35,6 +35,13 @@ namespace TrokaTroka.Api.Infra.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<Book>> BookByUserId(Guid idUser)
+        {
+            return await _context.Books
+                .Where(b => b.IdUser == idUser)
+                .ToListAsync();
+        }
+
         public async Task Create(Book book)
         {
             await _context.Books.AddAsync(book);
