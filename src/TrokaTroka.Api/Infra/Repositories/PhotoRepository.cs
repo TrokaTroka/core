@@ -17,31 +17,31 @@ namespace TrokaTroka.Api.Infra.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Photo>> GetPhotos()
+        public async Task<IEnumerable<PhotosBook>> GetPhotos()
         {
-            return await _context.Photos.ToListAsync();
+            return await _context.PhotosBooks.ToListAsync();
         }
 
-        public async Task<Photo> GetPhotoById(Guid idPhoto)
+        public async Task<PhotosBook> GetPhotoById(Guid idPhoto)
         {
-            return await _context.Photos.Where(b => b.Id == idPhoto).FirstOrDefaultAsync();
+            return await _context.PhotosBooks.Where(b => b.Id == idPhoto).FirstOrDefaultAsync();
         }
 
-        public async Task Create(List<Photo> photos)
+        public async Task Create(List<PhotosBook> photos)
         {
-            await _context.Photos.AddRangeAsync(photos);
+            await _context.PhotosBooks.AddRangeAsync(photos);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(Photo photo)
+        public async Task Update(PhotosBook photo)
         {
-            _context.Photos.Update(photo);
+            _context.PhotosBooks.Update(photo);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(Photo photo)
+        public async Task Delete(PhotosBook photo)
         {
-            _context.Photos.Remove(photo);
+            _context.PhotosBooks.Remove(photo);
             await _context.SaveChangesAsync();
         }
     }

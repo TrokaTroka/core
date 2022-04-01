@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Canducci.Pagination;
 using Microsoft.EntityFrameworkCore;
 using TrokaTroka.Api.Infra.Context;
 using TrokaTroka.Api.Interfaces.Repositories;
@@ -17,15 +18,16 @@ namespace TrokaTroka.Api.Infra.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetBooks(int page, int take, int skip)
+        public async Task<PaginatedRest<Book>> GetBooks(int pageSize, int pageNumber)
         {
-            var books = await _context.Books
-                .Include(c => c.Owner)
-                .Include(b => b.Photos)
-                .Include(u => u.Owner.Ratings)
-                .ToListAsync();
+            var skip = (pageNumber - 1) * pageSize;
 
-            return books;
+            return await _context.Books
+                    .Include(c => c.Owner)
+                    .Include(b => b.PhotosBooks)
+                    .Include(u => u.Owner.Ratings)
+                    .ToPaginatedRestAsync(pageNumber, pageSize);
+            
         }
 
         public async Task<Book> GetBookById(Guid idBook)

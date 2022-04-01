@@ -19,14 +19,18 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.10" />
+    <PackageReference Include="Canducci.Pagination" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Infra\Context\" />
+    <Folder Include="Dtos\InputModels\Querys\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Pomelo.EntityFrameworkCore.MySql" />
     <None Remove="MySql.EntityFrameworkCore" />
+    <None Remove="Canducci.Pagination" />
+    <None Remove="Dtos\InputModels\Query\" />
   </ItemGroup>
 </Project>

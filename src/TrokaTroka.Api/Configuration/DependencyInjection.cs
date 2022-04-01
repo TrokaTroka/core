@@ -25,6 +25,7 @@ namespace TrokaTroka.Api.Configuration
         {
             services.AddScoped<BaseService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IRatingService, RatingService>();
 

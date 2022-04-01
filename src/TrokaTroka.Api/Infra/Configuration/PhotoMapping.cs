@@ -4,9 +4,9 @@ using TrokaTroka.Api.Models;
 
 namespace TrokaTroka.Api.Infra.Configuration
 {
-    public class PhotoMapping : IEntityTypeConfiguration<Photo>
+    public class PhotoMapping : IEntityTypeConfiguration<PhotosBook>
     {
-        public void Configure(EntityTypeBuilder<Photo> builder)
+        public void Configure(EntityTypeBuilder<PhotosBook> builder)
         {
             builder
                 .HasKey(p => p.Id);
@@ -23,7 +23,7 @@ namespace TrokaTroka.Api.Infra.Configuration
 
             builder
                  .HasOne(p => p.Book)
-                 .WithMany(b => b.Photos)
+                 .WithMany(b => b.PhotosBooks)
                  .HasForeignKey(p => p.IdBook)
                  .OnDelete(DeleteBehavior.Restrict);
         }

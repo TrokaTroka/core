@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Canducci.Pagination;
 using TrokaTroka.Api.Dtos.InputModels;
+using TrokaTroka.Api.Dtos.InputModels.Querys;
 using TrokaTroka.Api.Dtos.ViewModels;
 using TrokaTroka.Api.Interfaces;
 using TrokaTroka.Api.Interfaces.Repositories;
@@ -37,15 +39,21 @@ namespace TrokaTroka.Api.Services
 
 
 
-        public async Task<IEnumerable<BookshellViewModel>> GetBookshell(int page, int take, int skip)
+        public async Task<PaginatedVM<BookshellViewModel>> GetBookshell(PaginationQuery paginationQuery)
         {
-            var books = await _bookRepository.GetBooks(page =0, take=0, skip =0);
+            var pageFilter = new PaginationFilter(paginationQuery.PageNumber, paginationQuery.PageSize, paginationQuery.Search);
 
-            var bookshellVM = new List<BookshellViewModel>();
+            var books = await _bookRepository.GetBooks(pageFilter.PageSize, paginationQuery.PageNumber);
 
-            foreach (var book in books)
+            var paginated = new PaginatedVM<BookshellViewModel>(books.PageCount, books.TotalItemCount, books.PageNumber, books.PageSize, books.HasPreviousPage,
+                books.HasNextPage, books.IsFirstPage, books.IsLastPage);
+
+            var bookshellVM = new PaginationResponse<BookshellViewModel>();
+            var bookshell = new List<BookshellViewModel>();
+
+            foreach (var book in books.Items)
             {
-                var photo = book.Photos.Select(c => c.Path).FirstOrDefault();
+                var photo = book.PhotosBooks.Select(c => c.Path).FirstOrDefault();
 
                 var ratings = book.Owner.Ratings;
 
@@ -53,17 +61,18 @@ namespace TrokaTroka.Api.Services
                     ? 0
                     : ratings.Sum(r => r.Grade) / ratings.ToArray().Length;
 
-                bookshellVM.Add(new BookshellViewModel(
-                    book.Id,
-                    book.Title,
-                    book.Owner.Name,
-                    grade,
-                    photo
-                    )
-                );
+                bookshell.Add(new BookshellViewModel(
+                        book.Id,
+                        book.Title,
+                        book.Owner.Name,
+                        grade,
+                        photo
+                    ));                
             }
 
-            return bookshellVM;
+            paginated.Objects = bookshell;
+
+            return paginated;
         }
 
         public async Task<BookViewModel> GetBookById(Guid idBook)
@@ -133,19 +142,19 @@ namespace TrokaTroka.Api.Services
                 user.Id
                 );
 
-            var photos = new List<Photo>();
+            var photos = new List<PhotosBook>();
 
             var response = new List<BlobResponse>();
 
             if (bookInput.Images.Any())
             {
                 bookInput.Images.ForEach(i =>
-                    response.Add(_blobStorageService.UploadFileToBlob(i, book.Id)));
+                    response.Add(_blobStorageService.UploadFileToBlob(i, book.Id, "books")));
 
                 if (response is null)
                     return Guid.Empty;
 
-                response.ForEach(r => photos.Add(new Photo(r.Uri.AbsoluteUri + "/" + r.Name, r.Name, book.Id)));
+                response.ForEach(r => photos.Add(new PhotosBook(r.Uri.AbsoluteUri + "/" + r.Name, r.Name, book.Id)));
             }            
 
             var bookCategory = new BookCategory(book.Id, bookInput.IdCategory);

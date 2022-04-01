@@ -14,7 +14,7 @@ namespace TrokaTroka.Api.Infra.Context
         public DbSet<BookCategory> BookCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Trade> Trades { get; set; }
-        public DbSet<Photo> Photos { get; set; }
+        public DbSet<PhotosBook> PhotosBooks { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Rating> Ratings { get; set; }
 

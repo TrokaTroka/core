@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TrokaTroka.Api.Infra.Context;
@@ -29,6 +30,23 @@ namespace TrokaTroka.Api.Infra.Repositories
         public async Task Create(User user)
         {
             await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<User> GetUserById(Guid id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+            return user;
+        }
+
+        public async Task Update(User user)
+        {
+            var entry = _context.Entry(user);
+
+            if (entry.State != EntityState.Modified)
+                entry.State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
         }
     }

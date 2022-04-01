@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace TrokaTroka.Api.Dtos.ViewModels
 {
@@ -13,11 +12,15 @@ namespace TrokaTroka.Api.Dtos.ViewModels
             Rate = rate;
             Path = list;
         }
+        public BookshellViewModel()
+        {
 
-        public Guid Id { get; private set; }
-        public string Title { get; private set; }
-        public string Owner { get; private set; }
-        public int Rate { get; private set; }
-        public string Path { get; private set; }
+        }
+
+        public Guid Id { get; set; }
+        public string Title { get; set; }
+        public string Owner { get; set; }
+        public int Rate { get; set; }
+        public string Path { get; set; }
     }
 }

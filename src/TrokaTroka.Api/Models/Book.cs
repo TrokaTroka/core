@@ -33,7 +33,7 @@ namespace TrokaTroka.Api.Models
         public Guid IdTrade { get; private set; }
 
         public User Owner { get; set; }
-        public List<Photo> Photos { get; set; }
+        public List<PhotosBook> PhotosBooks { get; set; }
 
         public Book()
         { }

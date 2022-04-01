@@ -2,9 +2,9 @@
 
 namespace TrokaTroka.Api.Models
 {
-    public class Photo : EntityBase
+    public class PhotosBook : EntityBase
     {
-        public Photo(string path, string name, Guid idBook)
+        public PhotosBook(string path, string name, Guid idBook)
         {
             Path = path;
             Name = name;
@@ -17,7 +17,7 @@ namespace TrokaTroka.Api.Models
 
         public Book Book { get; set; }
 
-        public Photo()
+        public PhotosBook()
         { }
     }
 }

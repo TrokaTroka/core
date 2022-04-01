@@ -12,12 +12,12 @@ namespace TrokaTroka.Api.Controllers
     [ApiController]
     public class AuthController : MainController
     {
-        private readonly IUserService _userService;
-        public AuthController(IUserService userService,
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService,
             IAuthenticatedUser user,
             INotifier notifier) : base(user, notifier)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
         [HttpPost("signin")]
@@ -26,7 +26,7 @@ namespace TrokaTroka.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _userService.AuthUser(loginInput);
+            var result = await _authService.AuthUser(loginInput);
 
             if (result == null)
                 return BadRequest("");
@@ -40,9 +40,12 @@ namespace TrokaTroka.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userService.CreateUser(userInput);
+            var result = await _authService.CreateUser(userInput);
 
-            return Created(nameof(SignIn), user);
+            if (result == null)
+                return BadRequest("");
+
+            return Created(nameof(SignIn), result);
         }
 
         [HttpPost("refresh-token")]
@@ -51,12 +54,12 @@ namespace TrokaTroka.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var refreshToken = await _userService.ObterRefreshToken(Guid.Parse(refreshTokenId));
+            var refreshToken = await _authService.ObterRefreshToken(Guid.Parse(refreshTokenId));
 
             if (refreshToken is null)
                 return BadRequest("Refresh token expirado");
 
-            var token = _userService.GerarJwtToken(refreshToken.Username);
+            var token = _authService.GerarJwtToken(refreshToken.Username);
 
             return Ok(token);
         }

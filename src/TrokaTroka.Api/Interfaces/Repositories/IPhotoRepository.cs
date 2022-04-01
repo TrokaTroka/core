@@ -7,10 +7,10 @@ namespace TrokaTroka.Api.Interfaces.Repositories
 {
     public interface IPhotoRepository
     {
-        Task<IEnumerable<Photo>> GetPhotos();
-        Task<Photo> GetPhotoById(Guid idPhoto);
-        Task Create(List<Photo> photo);
-        Task Update(Photo photo);
-        Task Delete(Photo photo);
+        Task<IEnumerable<PhotosBook>> GetPhotos();
+        Task<PhotosBook> GetPhotoById(Guid idPhoto);
+        Task Create(List<PhotosBook> photo);
+        Task Update(PhotosBook photo);
+        Task Delete(PhotosBook photo);
     }
 }

@@ -7,8 +7,9 @@ namespace TrokaTroka.Api.Interfaces.Services
 {
     public interface IBlobStorageService
     {
-        BlobResponse UploadFileToBlob(IFormFile image, Guid idBook);
+        BlobResponse UploadFileToBlob(IFormFile image, Guid idBook, string containerName);
+        BlobResponse UploadFileToBlobWithName(IFormFile image, Guid idBook, string containerName, string name);
         Task<byte[]> GetImage(string imageName);
-        string GenerateFileName(Guid idBook);
+        string GenerateFileName(Guid id);
     }
 }

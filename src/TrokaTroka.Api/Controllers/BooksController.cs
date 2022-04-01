@@ -6,7 +6,7 @@ using TrokaTroka.Api.Dtos.InputModels;
 using TrokaTroka.Api.Interfaces;
 using TrokaTroka.Api.Interfaces.Services;
 using TrokaTroka.Api.Notifications;
-using System.Linq;
+using TrokaTroka.Api.Dtos.InputModels.Querys;
 
 namespace TrokaTroka.Api.Controllers
 {
@@ -28,9 +28,9 @@ namespace TrokaTroka.Api.Controllers
 
 
         [HttpGet("")]
-        public async Task<IActionResult> GetBookshell(int page, int take, int skip)
+        public async Task<IActionResult> GetBookshell([FromQuery] PaginationQuery paginationQuery)
         {
-            var booksVM = await _bookService.GetBookshell(page =0, take = 0, skip = 0);
+            var booksVM = await _bookService.GetBookshell(paginationQuery);
 
             if (booksVM == null)
                 return NotFound("");

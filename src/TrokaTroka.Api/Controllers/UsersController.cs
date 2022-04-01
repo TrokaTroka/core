@@ -1,24 +1,35 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TrokaTroka.Api.Dtos.InputModels;
+using TrokaTroka.Api.Interfaces;
 using TrokaTroka.Api.Interfaces.Services;
+using TrokaTroka.Api.Notifications;
 
 namespace TrokaTroka.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    [Authorize]
+    public class UsersController : MainController
     {
-        private readonly IBlobStorageService _blobStorageService;
-        public UsersController(IBlobStorageService blobStorageService)
+        private readonly IUserService _userService;
+        public UsersController(IUserService userService,
+            IAuthenticatedUser user,
+            INotifier notifier) : base(user, notifier)
         {
-            _blobStorageService = blobStorageService;
+            _userService = userService;
         }
 
         [HttpPost]
-        public IActionResult AddAvatar(IFormFile file)
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserInputModel inputModel)
         {
-            //_blobStorageService.UploadFileToBlob(file.FileName, file, file.ContentType);
-            return Ok();
+            var result = await _userService.UpdateUser(inputModel);
+
+            if (result == null)
+                return BadRequest("");
+
+            return Ok(result);
         }
     }
 }
